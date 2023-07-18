@@ -1,0 +1,16 @@
+<h2 class="dialog-title">Modifier le produit</h2>
+<form [formGroup]="editProduitForm" (submit)="onSubmit()" class="custom-form-class">
+  <mat-form-field>
+    <input matInput placeholder="Nom" formControlName="nom">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Prix unitaire" formControlName="prixUnitaire">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Quantité" formControlName="quantite">
+  </mat-form-field>
+  <div class="button-container">
+    <button mat-raised-button color="primary" type="submit">Modifier</button>
+    <button mat-raised-button mat-dialog-close color="warn" class="cancel-button">Annuler</button>
+  </div>
+</form>
