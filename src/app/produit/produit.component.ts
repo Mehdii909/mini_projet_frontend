@@ -185,16 +185,17 @@ export class EditProduitDialogComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // Ouvrir un dialogue de confirmation avant de soumettre les modifications
-    const dialogRef = this.dialog.open(ConfirmModifDialogComponent, {
-      width: '300px',
-    });
+    // Vérifier si le formulaire est valide avant d'ouvrir le dialogue de confirmation
+    if (this.editProduitForm.valid) {
+      // Ouvrir un dialogue de confirmation avant de soumettre les modifications
+      const dialogRef = this.dialog.open(ConfirmModifDialogComponent, {
+        width: '300px',
+      });
 
-    // S'abonner à l'événement après la fermeture du dialogue de confirmation
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      if (result) {
-        // Si l'utilisateur confirme la modification, soumettre les modifications
-        if (this.editProduitForm.valid) {
+      // S'abonner à l'événement après la fermeture du dialogue de confirmation
+      dialogRef.afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          // Si l'utilisateur confirme la modification, soumettre les modifications
           const produit: Produit = {
             id: this.data.id,
             nom: this.editProduitForm.value.nom,
@@ -203,8 +204,8 @@ export class EditProduitDialogComponent implements OnInit {
           };
           this.dialogRef.close(produit);
         }
-      }
-    });
+      });
+    }
   }
 
 }
