@@ -1,13 +1,13 @@
 <h2 class="dialog-title">Ajouter un produit</h2>
 <form [formGroup]="addProduitForm" (submit)="onSubmit()" class="custom-form-class">
   <mat-form-field>
-    <input matInput placeholder="Nom" formControlName="nom">
+    <input matInput placeholder="Nom" formControlName="nom" type="text">
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="Prix unitaire" formControlName="prixUnitaire">
+    <input matInput placeholder="Prix unitaire" formControlName="prixUnitaire" type="number">
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="Quantité" formControlName="quantite">
+    <input matInput placeholder="Quantité" formControlName="quantite" type="number">
   </mat-form-field>
   <div class="button-container">
     <button mat-raised-button color="primary" type="submit">Ajouter</button>
