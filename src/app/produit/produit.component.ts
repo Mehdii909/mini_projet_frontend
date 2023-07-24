@@ -56,8 +56,14 @@ export class ProduitComponent implements OnInit {
 
   deleteProduit(produitId: number): void {
     // Ouvre le dialogue de confirmation avant de supprimer le produit
-    const dialogRef = this.dialog.open(ConfirmSuppDialogComponent, {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '300px',
+      data: {
+        title: 'Confirmer la suppression',
+        message: 'Êtes-vous sûr de vouloir supprimer ce produit ?',
+        confirmText: 'Supprimer',
+        confirmColor: 'warn'
+      }
     });
 
     // S'abonne à l'événement après la fermeture du dialogue de confirmation
@@ -188,8 +194,14 @@ export class EditProduitDialogComponent implements OnInit {
     // Vérifier si le formulaire est valide avant d'ouvrir le dialogue de confirmation
     if (this.editProduitForm.valid) {
       // Ouvrir un dialogue de confirmation avant de soumettre les modifications
-      const dialogRef = this.dialog.open(ConfirmModifDialogComponent, {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         width: '300px',
+        data: {
+          title: 'Confirmer la modification',
+          message: 'Êtes-vous sûr de vouloir modifier ce produit ?',
+          confirmText: 'Confirmer',
+          confirmColor: 'primary'
+        }
       });
 
       // S'abonner à l'événement après la fermeture du dialogue de confirmation
@@ -224,45 +236,31 @@ export class ProduitDetailsDialogComponent {
   }
 }
 
-
 @Component({
   selector: 'app-confirm-dialog',
   template: `
-    <h2 mat-dialog-title>Confirmer la suppression</h2>
+    <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>
-      Êtes-vous sûr de vouloir supprimer ce produit ?
+      {{ data.message }}
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Annuler</button>
-      <button mat-button [mat-dialog-close]="true" color="warn">Supprimer</button>
+      <button mat-button [mat-dialog-close]="true" [color]="data.confirmColor">{{ data.confirmText }}</button>
     </mat-dialog-actions>
   `,
 })
-export class ConfirmSuppDialogComponent {
+export class ConfirmDialogComponent {
+
+  @Input() title: string = '';
+  @Input() message: string = '';
+  @Input() confirmText: string = '';
+  @Input() confirmColor: string = '';
+
+
   constructor(
-    private dialogRef: MatDialogRef<ConfirmSuppDialogComponent>,
+    private dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 }
 
 
-
-@Component({
-  selector: 'app-confirm-dialog',
-  template: `
-    <h2 mat-dialog-title>Confirmer la modification</h2>
-    <mat-dialog-content>
-      Êtes-vous sûr de vouloir modifier ce produit ?
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Annuler</button>
-      <button mat-button [mat-dialog-close]="true" color="mat-success">Confirmer</button>
-    </mat-dialog-actions>
-  `,
-})
-export class ConfirmModifDialogComponent {
-  constructor(
-    private dialogRef: MatDialogRef<ConfirmModifDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
-}

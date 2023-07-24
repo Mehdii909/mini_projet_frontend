@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  AddProduitDialogComponent, ConfirmModifDialogComponent, ConfirmSuppDialogComponent,
+  AddProduitDialogComponent, ConfirmDialogComponent,
   EditProduitDialogComponent,
   ProduitComponent,
   ProduitDetailsDialogComponent
@@ -25,9 +25,7 @@ import {MatDialogModule} from "@angular/material/dialog";
     AddProduitDialogComponent,
     EditProduitDialogComponent,
     ProduitDetailsDialogComponent,
-    ConfirmSuppDialogComponent,
-    ConfirmModifDialogComponent,
-
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
