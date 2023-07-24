@@ -55,8 +55,20 @@ export class ProduitComponent implements OnInit {
   }
 
   deleteProduit(produitId: number): void {
-    this.produitService.deleteProduit(produitId).subscribe(() => {
-      this.loadProduits();
+    // Ouvre le dialogue de confirmation avant de supprimer le produit
+    const dialogRef = this.dialog.open(ConfirmSuppDialogComponent, {
+      width: '300px',
+    });
+
+    // S'abonne à l'événement après la fermeture du dialogue de confirmation
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        // Si l'utilisateur confirme la suppression, appelle le service pour supprimer le produit
+        this.produitService.deleteProduit(produitId).subscribe(() => {
+          // Recharge la liste des produits après la suppression
+          this.loadProduits();
+        });
+      }
     });
   }
 
@@ -78,7 +90,6 @@ export class ProduitComponent implements OnInit {
       }
     });
   }
-
 
   openEditDialog(id: number, nom: string, prixUnitaire: number, quantite: number): void {
     // Ouvre le dialogue pour modifier un produit
@@ -148,18 +159,19 @@ export class AddProduitDialogComponent implements OnInit {
   }
 }
 
-
 @Component({
   selector: 'app-edit-produit-dialog',
   templateUrl: './edit-produit-dialog.component.html',
   styleUrls: ['./produit.component.scss']
 })
+
 export class EditProduitDialogComponent implements OnInit {
   // @ts-ignore
   editProduitForm: FormGroup;
 
   constructor(
     private dialogRef: MatDialogRef<EditProduitDialogComponent>,
+    private dialog: MatDialog,
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
@@ -173,28 +185,83 @@ export class EditProduitDialogComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.editProduitForm.valid) {
-      const produit: Produit = {
-        id: this.data.id,
-        nom: this.editProduitForm.value.nom,
-        prixUnitaire: this.editProduitForm.value.prixUnitaire,
-        quantite: this.editProduitForm.value.quantite
-      };
-      this.dialogRef.close(produit);
-    }
-  }
-}
+    // Ouvrir un dialogue de confirmation avant de soumettre les modifications
+    const dialogRef = this.dialog.open(ConfirmModifDialogComponent, {
+      width: '300px',
+    });
 
+    // S'abonner à l'événement après la fermeture du dialogue de confirmation
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        // Si l'utilisateur confirme la modification, soumettre les modifications
+        if (this.editProduitForm.valid) {
+          const produit: Produit = {
+            id: this.data.id,
+            nom: this.editProduitForm.value.nom,
+            prixUnitaire: this.editProduitForm.value.prixUnitaire,
+            quantite: this.editProduitForm.value.quantite
+          };
+          this.dialogRef.close(produit);
+        }
+      }
+    });
+  }
+
+}
 
 @Component({
   selector: 'app-produit-details-dialog',
   templateUrl: './produit-details-dialog.component.html',
   styleUrls: ['./produit.component.scss']
 })
+
 export class ProduitDetailsDialogComponent {
   @Input() produit: Produit;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
     this.produit = data.produit;
   }
+}
+
+
+@Component({
+  selector: 'app-confirm-dialog',
+  template: `
+    <h2 mat-dialog-title>Confirmer la suppression</h2>
+    <mat-dialog-content>
+      Êtes-vous sûr de vouloir supprimer ce produit ?
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Annuler</button>
+      <button mat-button [mat-dialog-close]="true" color="warn">Supprimer</button>
+    </mat-dialog-actions>
+  `,
+})
+export class ConfirmSuppDialogComponent {
+  constructor(
+    private dialogRef: MatDialogRef<ConfirmSuppDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+}
+
+
+
+@Component({
+  selector: 'app-confirm-dialog',
+  template: `
+    <h2 mat-dialog-title>Confirmer la modification</h2>
+    <mat-dialog-content>
+      Êtes-vous sûr de vouloir modifier ce produit ?
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Annuler</button>
+      <button mat-button [mat-dialog-close]="true" color="mat-success">Confirmer</button>
+    </mat-dialog-actions>
+  `,
+})
+export class ConfirmModifDialogComponent {
+  constructor(
+    private dialogRef: MatDialogRef<ConfirmModifDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 }
